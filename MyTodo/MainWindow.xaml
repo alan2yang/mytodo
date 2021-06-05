@@ -7,8 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResizeWithGrip">
     <Window.Resources>
-        
-        
         <!--自定义radionbutton的样式及触发器-->
         <Style x:Key="CustomRadioButtonStyle" TargetType="{x:Type RadioButton}">
             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -17,8 +15,8 @@
                     <ControlTemplate TargetType="{x:Type RadioButton}">
                         <Grid Background="Transparent">
                             <Border x:Name="border_back"/>
-                            <Border x:Name="border_thick" Margin="0 10 5 10"/>
-                            <ContentPresenter/>
+                            <Border x:Name="border_thick" Margin="0 8 5 8"/>
+                            <ContentPresenter Margin="10 0 0 0"/>
                         </Grid>
                         
                         <ControlTemplate.Triggers>
@@ -27,14 +25,14 @@
                             </Trigger>
 
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="Foreground" Value="Red" />
+                                <Setter Property="Foreground" Value="{Binding BackColor}" />
                                 <Setter Property="FontWeight" Value="Bold"/>
 
-                                <Setter Property="Background" Value="Red" TargetName="border_back"/>
+                                <Setter Property="Background" Value="{Binding BackColor}" TargetName="border_back"/>
                                 <Setter Property="Opacity" Value="0.05" TargetName="border_back"/>
 
                                 <Setter Property="BorderThickness" Value="2 0 0 0" TargetName="border_thick"/>
-                                <Setter Property="BorderBrush" Value="Red" TargetName="border_thick"/>
+                                <Setter Property="BorderBrush" Value="{Binding BackColor}" TargetName="border_thick"/>
 
                             </Trigger>
 
@@ -59,13 +57,13 @@
                 <TextBlock Text="&#xe645;" FontFamily="./Fonts/#iconfont" FontSize="22" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 0 10 0"></TextBlock>
             </UniformGrid>
 
-            <ListBox BorderThickness="0">
+            <ListBox BorderThickness="0" ItemsSource="{Binding MenuModels}">
                 <!--修改listbox元素样式-->
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         <Setter Property="Height" Value="45"/>
-                        <Setter Property="Margin" Value="10 3 0 0"/>
+                        <Setter Property="Margin" Value="0 3 0 0"/>
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="{x:Type ListBoxItem}">
@@ -75,41 +73,37 @@
                         </Setter>
                     </Style>
                 </ListBox.ItemContainerStyle>
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+
+                        
+
+                            <RadioButton Style="{DynamicResource CustomRadioButtonStyle}">
+                                <RadioButton.IsChecked>
+                                    <Binding Path="IsSelected" RelativeSource="{RelativeSource AncestorType=ListBoxItem}" Mode="TwoWay"></Binding>
+                                    <!--这里的绑定怎么理解？？？-->
+                                </RadioButton.IsChecked>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition Width="20"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding IconFont}" FontFamily="./Fonts/#iconfont" FontSize="22" VerticalAlignment="Center" Foreground="{Binding BackColor}" />
+                                    <TextBlock Text="{Binding Title}" Margin="10 0 0 0" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <TextBlock Text="{Binding Count}" Grid.Column="1" VerticalAlignment="Center"></TextBlock>
+
+                            </Grid>
+                        </RadioButton>
+
+                    </DataTemplate>
+                    
+                </ListBox.ItemTemplate>
                 
-                <RadioButton Style="{DynamicResource CustomRadioButtonStyle}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="&#xe635;" FontFamily="./Fonts/#iconfont" FontSize="22" VerticalAlignment="Center" />
-                        <TextBlock Text="我的一天" Margin="10 0 0 0" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </RadioButton>
-
-                <RadioButton Style="{DynamicResource CustomRadioButtonStyle}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="&#xe6b6;" FontFamily="./Fonts/#iconfont" FontSize="22" VerticalAlignment="Center"/>
-                        <TextBlock Text="重要" Margin="10 0 0 0" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </RadioButton>
-
-                <RadioButton Style="{DynamicResource CustomRadioButtonStyle}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="&#xe6e1;" FontFamily="./Fonts/#iconfont" FontSize="22" VerticalAlignment="Center"/>
-                        <TextBlock Text="已计划日程" Margin="10 0 0 0" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </RadioButton>
-
-                <RadioButton Style="{DynamicResource CustomRadioButtonStyle}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="&#xe614;" FontFamily="./Fonts/#iconfont" FontSize="22" VerticalAlignment="Center"/>
-                        <TextBlock Text="已分配给我" Margin="10 0 0 0" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </RadioButton>
-
-                <RadioButton Style="{DynamicResource CustomRadioButtonStyle}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="&#xe755;" FontFamily="./Fonts/#iconfont" FontSize="22" VerticalAlignment="Center"/>
-                        <TextBlock Text="任务" Margin="10 0 0 0" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </RadioButton>
+                
             </ListBox>
 
 
