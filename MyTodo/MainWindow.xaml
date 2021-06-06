@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyTodo"
+        xmlns:cv="clr-namespace:MyTodo.Converters"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResizeWithGrip">
     <Window.Resources>
@@ -41,6 +42,9 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <cv:DisplayConverter x:Key="disCv"></cv:DisplayConverter>
+        <cv:DisplayDateConverter x:Key="disDateCv"></cv:DisplayDateConverter>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -76,13 +80,12 @@
 
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-
-                        
-
-                            <RadioButton Style="{DynamicResource CustomRadioButtonStyle}">
+                        <!--关于命令绑定的知识点？？？RelativeSource和传参的问题-->
+                            <RadioButton Command="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type local:MainWindow}},Path=DataContext.SelectedCommand,Mode=TwoWay}" CommandParameter="{Binding}"
+                                         Style="{DynamicResource CustomRadioButtonStyle}">
                                 <RadioButton.IsChecked>
                                     <Binding Path="IsSelected" RelativeSource="{RelativeSource AncestorType=ListBoxItem}" Mode="TwoWay"></Binding>
-                                    <!--这里的绑定怎么理解？？？-->
+                                    <!--这里的绑定怎么理解，包括RelativeSource？？？-->
                                 </RadioButton.IsChecked>
 
                             <Grid>
@@ -109,5 +112,91 @@
 
 
         </StackPanel>
+
+        <Grid Grid.Column="1" Background="{Binding MenuModel.BackColor}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"></RowDefinition>
+                <RowDefinition Height="70"></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="90"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Width="45" Height="30" Foreground="White" Content="─" Background="Transparent" BorderThickness="0"></Button>
+                <Button Width="45" Height="30" Foreground="White" Content="◻" Background="Transparent" BorderThickness="0"></Button>
+                <Button Width="45" Height="30" Foreground="White" Content="╳" Background="Transparent" BorderThickness="0"></Button>
+                
+            </StackPanel>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="250"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="30 0 0 0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding MenuModel.IconFont}" Name="icon" Visibility="{Binding MenuModel.Display,Converter={StaticResource disCv}}" FontFamily="./Fonts/#iconfont" Foreground="White" FontSize="30" VerticalAlignment="Center" Margin="0 0 5 0"></TextBlock>
+                    <TextBlock Text="{Binding MenuModel.Title}" Name="title" Foreground="White" FontSize="30" FontWeight="Bold" VerticalAlignment="Center"></TextBlock>
+                    </StackPanel>
+                    <TextBlock  Foreground="White" VerticalAlignment="Center">
+                        <!--多路绑定-->
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource disDateCv}">
+                                <Binding Path="Visibility" ElementName="icon"></Binding>
+                                <Binding Path="Text" ElementName="title"></Binding>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+                
+            </Grid>
+
+
+            <Border Grid.Row="3" Margin="40 0 40 30" Background="Black" Opacity="0.1" CornerRadius="5"></Border>
+            <Border Grid.Row="3" Margin="40 0 40 30">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="＋" Foreground="White" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                    <TextBox Grid.Column="1">
+                        <TextBox.Resources>
+                            <!--这是什么？-->
+                            <VisualBrush x:Key="hintext" Stretch="None" AlignmentX="Left">
+                                <VisualBrush.Visual>
+                                    <TextBlock FontStyle="Normal" Text="添加任务"></TextBlock>
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </TextBox.Resources>
+                        
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Setter Property="Background" Value="Transparent"></Setter>
+                                <Setter Property="BorderThickness" Value="0"></Setter>
+                                <Setter Property="Foreground" Value="White"></Setter>
+                                <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                                <Setter Property="FontSize" Value="14"></Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="Text" Value="">
+                                        <Setter Property="Background" Value="{StaticResource hintext}"></Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                                
+                            </Style>
+                        </TextBox.Style>
+                        
+                        
+                    </TextBox>
+
+                </Grid>
+
+                
+            </Border>
+            
+        </Grid>
+        
     </Grid>
 </Window>
