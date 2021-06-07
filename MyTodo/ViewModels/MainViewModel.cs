@@ -46,10 +46,18 @@ namespace MyTodo.ViewModels
             set { SetProperty(ref menuModel, value); }
         }
 
-
+        //选中左侧列表时，设置右侧数据模型
         private void Select(MenuModel menuModel)
         {
-            MenuModel = menuModel;
+            this.MenuModel = menuModel;
+        }
+
+        public void AddTask(string content)
+        {
+            var task = new TaskInfo { Content = content };
+
+            this.menuModel.TaskInfos.Add(task);
+
         }
 
 
