@@ -1,4 +1,5 @@
-﻿using MyTodo.ViewModels;
+﻿using MyTodo.Models;
+using MyTodo.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace MyTodo
 {
@@ -25,6 +27,7 @@ namespace MyTodo
         {
             InitializeComponent();
             this.DataContext = new MainViewModel();
+            WeakReferenceMessenger.Default.Register<TaskInfo>(this, (o, task) => { this.ExpandColumn(task); });//消息机制？？？？
         }
 
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
@@ -44,14 +47,39 @@ namespace MyTodo
             }
         }
 
-        private void ExpandColumn()
+        private void ExpandColumn(TaskInfo task)
         {
             var cdf= grc.ColumnDefinitions;
-            cdf[1].Width = new GridLength(280);
 
-            this.minbtn.Foreground = new SolidColorBrush(Colors.Black);
-            this.maxbtn.Foreground = new SolidColorBrush(Colors.Black);
-            this.closebtn.Foreground = new SolidColorBrush(Colors.Black);
+
+            if (cdf[1].Width == new GridLength(280))
+            {
+                var mainViewModel = this.DataContext as MainViewModel;
+                
+                if (task == null||task.Content==mainViewModel.SelectedTaskInfo.Content)
+                {
+                    cdf[1].Width = new GridLength(0);
+
+                    this.minbtn.Foreground = new SolidColorBrush(Colors.White);
+                    this.maxbtn.Foreground = new SolidColorBrush(Colors.White);
+                    this.closebtn.Foreground = new SolidColorBrush(Colors.White);
+                }
+                else
+                {
+                    return;
+                }
+
+                
+            }
+            else
+            {
+                cdf[1].Width = new GridLength(280);
+
+                this.minbtn.Foreground = new SolidColorBrush(Colors.Black);
+                this.maxbtn.Foreground = new SolidColorBrush(Colors.Black);
+                this.closebtn.Foreground = new SolidColorBrush(Colors.Black);
+            }
+            
 
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using MyTodo.Models;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace MyTodo.ViewModels
             this.MenuModel = MenuModels[0];
 
             SelectedCommand = new RelayCommand<MenuModel>(t => { this.Select(t); });
-
+            SelectedTaskCommand = new RelayCommand<TaskInfo>(t => { this.SelectTask(t); });
         }
 
 
@@ -36,8 +37,9 @@ namespace MyTodo.ViewModels
 
 
         public RelayCommand<MenuModel> SelectedCommand { get; set; }
+        public RelayCommand<TaskInfo> SelectedTaskCommand { get; set; }
 
-        //用于右侧显示
+        //用于右侧显示任务列表
         private MenuModel menuModel;
 
         public MenuModel MenuModel
@@ -46,7 +48,15 @@ namespace MyTodo.ViewModels
             set { SetProperty(ref menuModel, value); }
         }
 
-        //选中左侧列表时，设置右侧数据模型
+        //用于显示任务详情
+        private TaskInfo selectedTaskInfo;
+        public TaskInfo SelectedTaskInfo
+        {
+            get { return selectedTaskInfo; }
+            set { SetProperty(ref selectedTaskInfo, value); }
+        }
+
+        //选中左侧列表时，设置右侧任务列表的数据模型
         private void Select(MenuModel menuModel)
         {
             this.MenuModel = menuModel;
@@ -60,6 +70,10 @@ namespace MyTodo.ViewModels
 
         }
 
-
+        public void SelectTask(TaskInfo taskInfo)
+        {
+            WeakReferenceMessenger.Default.Send<TaskInfo>(taskInfo);//发送消息
+            this.SelectedTaskInfo = taskInfo;
+        }
     }
 }

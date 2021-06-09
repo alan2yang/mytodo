@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:MyTodo"
         xmlns:cv="clr-namespace:MyTodo.Converters"
         mc:Ignorable="d"
@@ -168,6 +169,12 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border CornerRadius="5" Background="White" Height="50" Margin="40 2 40 2">
+                                <!--Border无法绑定命令，这里使用了外部插件Microsoft.Xaml.Behaviors.Wpf来实现。其功能到底是什么？？？-->
+                                <behaviors:Interaction.Triggers>
+                                    <behaviors:EventTrigger EventName="MouseLeftButtonDown">
+                                        <behaviors:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type local:MainWindow}},Path=DataContext.SelectedTaskCommand,Mode=TwoWay}" CommandParameter="{Binding}"></behaviors:InvokeCommandAction>
+                                    </behaviors:EventTrigger>
+                                </behaviors:Interaction.Triggers>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="50"></ColumnDefinition>
@@ -236,11 +243,107 @@
                 
             </Border>
 
+            <Grid Background="White" Grid.Column="1" Grid.RowSpan="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="145"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="55"/>
+                </Grid.RowDefinitions>
 
-            <StackPanel Grid.Column="1" Grid.RowSpan="4" Background="White">
-                
-                 
-            </StackPanel>
+                <Grid Margin="0 30 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="50"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="○" VerticalAlignment="Center" Foreground="Black" HorizontalAlignment="Center" FontSize="40"></TextBlock>
+                    <TextBlock Text="{Binding SelectedTaskInfo.Content}" Grid.Column="1" VerticalAlignment="Center" FontSize="18"></TextBlock>
+                    <TextBlock Text="☆" Grid.Column="2"  Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+
+                    <StackPanel Grid.Row="1" Grid.ColumnSpan="3" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="&#xe600;" Margin="15 0 0 0" FontSize="22" Foreground="#4876FF" FontFamily="./Fonts/#iconfont"/>
+                        <TextBlock Text="添加步骤" Margin="15 0 0 0" FontSize="16" Foreground="#4876FF"/>
+                    </StackPanel>
+                </Grid>
+ 
+                <StackPanel Margin="10" Grid.Row="1">
+                    <Border Background="White" BorderThickness="1" BorderBrush="#EAEAEA" Height="50">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="30"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="&#xe635;" VerticalAlignment="Center" Foreground="#4876FF" FontFamily="./Fonts/#iconfont" FontSize="30" Margin="10 0 0 0"/>
+
+                            <TextBlock Grid.Column="1" Text="已添加到'我的一天'" Foreground="#4876FF" VerticalAlignment="Center" FontSize="15"/>
+
+                            <TextBlock Grid.Column="2" Text="✕" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Grid>
+                    </Border >
+
+                    <Border Background="White" BorderThickness="1" BorderBrush="#EAEAEA" Height="150" Margin="0 8 0 0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="&#xe624;" VerticalAlignment="Center" Foreground="#4876FF" FontFamily="./Fonts/#iconfont" FontSize="30" Margin="10 0 0 0"/>
+                            <TextBlock Grid.Row="1" Text="&#xe6e1;" VerticalAlignment="Center" Foreground="#4876FF" FontFamily="./Fonts/#iconfont" FontSize="30" Margin="10 0 0 0"/>
+                            <TextBlock Grid.Row="2" Text="&#xe623;" VerticalAlignment="Center" Foreground="#4876FF" FontFamily="./Fonts/#iconfont" 
+                                           FontSize="20" Margin="15 0 0 0"/>
+
+                            <TextBlock Grid.Column="1" Text="提醒我" Foreground="#4876FF" VerticalAlignment="Center" FontSize="15"/>
+                            <TextBlock Grid.Column="1" Grid.Row="1" Text="今天到期" Foreground="#4876FF" VerticalAlignment="Center" FontSize="15"/>
+                            <TextBlock Grid.Column="1" Grid.Row="2" Text="工作日" Foreground="#4876FF" VerticalAlignment="Center" FontSize="15"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Background="White" BorderThickness="1" BorderBrush="#EAEAEA" Height="50" Margin="0 8 0 0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="&#xe628;" VerticalAlignment="Center" Foreground="#636363" FontFamily="./Fonts/#iconfont" FontSize="30" Margin="10 0 0 0"/>
+
+                            <TextBlock Grid.Column="1" Text="添加文件" Foreground="#636363" VerticalAlignment="Center" FontSize="15"/>
+
+                        </Grid>
+                    </Border>
+
+                    <Border Background="White" BorderThickness="1" BorderBrush="#EAEAEA" Height="80" Margin="0 8 0 0">
+                        <TextBlock Grid.Column="1" Text="添加备注" Margin="10" Foreground="#636363" FontSize="15"/>
+                    </Border>
+
+                </StackPanel>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="30"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Command="{Binding SelectedTaskCommand}" CommandParameter="{x:Null}" Content="&#xe60a;" Background="Transparent" Foreground="#636363" FontSize="14" BorderThickness="0" FontFamily="./Fonts/#iconfont"></Button>
+                    <TextBlock Grid.Column="1" Text="创建于xx小时前" Foreground="#636363"  VerticalAlignment="Center" FontSize="14" HorizontalAlignment="Center"></TextBlock>
+                    <Button Grid.Column="2" Content="&#xe610;" Background="Transparent" Foreground="#636363"  FontSize="20" BorderThickness="0" FontFamily="./Fonts/#iconfont"></Button>
+                </Grid>
+
+            </Grid>
             
         </Grid>
         
