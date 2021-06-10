@@ -98,7 +98,7 @@
                                     <TextBlock Text="{Binding IconFont}" FontFamily="./Fonts/#iconfont" FontSize="22" VerticalAlignment="Center" Foreground="{Binding BackColor}" />
                                     <TextBlock Text="{Binding Title}" Margin="10 0 0 0" VerticalAlignment="Center"/>
                                 </StackPanel>
-                                <TextBlock Text="{Binding Count}" Grid.Column="1" VerticalAlignment="Center"></TextBlock>
+                                <TextBlock Text="{Binding TaskInfos.Count}" Grid.Column="1" VerticalAlignment="Center"></TextBlock>
 
                             </Grid>
                         </RadioButton>

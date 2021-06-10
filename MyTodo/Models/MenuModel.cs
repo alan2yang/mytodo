@@ -11,7 +11,6 @@ namespace MyTodo.Models
         public string IconFont { get; set; }
         public string Title { get; set; }
         public string BackColor { get; set; }
-        public int Count { get; set; }
         public bool Display { get; set; } = true;
 
         public ObservableCollection<TaskInfo> taskInfos=new ObservableCollection<TaskInfo>();
@@ -20,6 +19,7 @@ namespace MyTodo.Models
             get { return taskInfos; }
             set { SetProperty(ref taskInfos, value); } 
         }
+
     }
 
     public class TaskInfo
